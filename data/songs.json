@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-14T15:01:56.895Z",
+  "updatedAt": "2026-10-14T15:04:08.481Z",
   "songs": [
     {
       "id": "163c3564-e9cc-4669-b9f4-751f13592d73",
@@ -51,6 +51,11 @@
       "id": "ded203cb-6ea1-40b9-beb8-1c8ce1fb474e",
       "artist": "薛之谦",
       "title": "方圆几里"
+    },
+    {
+      "id": "f98ac600-5dbd-4929-890f-f5a0a9c14f9e",
+      "artist": "陈小春",
+      "title": "独家记忆"
     }
   ]
 }
