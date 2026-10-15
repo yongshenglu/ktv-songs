@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-15T07:17:49.114Z",
+  "updatedAt": "2026-10-15T07:29:20.797Z",
   "songs": [
     {
       "id": "163c3564-e9cc-4669-b9f4-751f13592d73",
@@ -296,6 +296,11 @@
       "id": "9a90d74f-2e8d-48e8-a75f-8dd01bcece0f",
       "artist": "蔡旻佑",
       "title": "我可以"
+    },
+    {
+      "id": "b0fc9083-fa3e-4958-bbef-193be49e2b2b",
+      "artist": "周传雄",
+      "title": "青花"
     }
   ]
 }
