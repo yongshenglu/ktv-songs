@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-15T04:13:28.658Z",
+  "updatedAt": "2026-10-15T04:16:02.266Z",
   "songs": [
     {
       "id": "163c3564-e9cc-4669-b9f4-751f13592d73",
@@ -221,6 +221,11 @@
       "id": "fd30c7cd-accf-464c-9c2f-5ecef17324af",
       "artist": "赵鑫",
       "title": "许多年以后"
+    },
+    {
+      "id": "f2183808-7cdf-4512-aed8-a8e0eedec5e6",
+      "artist": "李行亮",
+      "title": "回忆里的那个人"
     }
   ]
 }
