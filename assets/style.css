@@ -285,7 +285,9 @@ textarea {
 .artist.is-open .artist-body {
   grid-template-rows: 1fr;
 }
-.artist-body > ul {
+/* 裁剪放在这一层：ul 自己的内边距算进它的边框盒，
+   0fr 收不住，套一层才能让收起状态真正归零 */
+.artist-body-inner {
   overflow: hidden;
   min-height: 0;
 }

@@ -69,17 +69,19 @@ function renderGroup(group) {
   const key = normKey(group.artist);
   const isOpen = expanded.has(key);
 
-  const body = el(
-    "div",
-    { class: "artist-body" },
-    [
-      el(
-        "ul",
-        { class: "song-list" },
-        group.songs.map((song) => el("li", { class: "song", text: song.title }))
-      ),
-    ]
-  );
+  const body = el("div", { class: "artist-body" }, [
+    el(
+      "div",
+      { class: "artist-body-inner" },
+      [
+        el(
+          "ul",
+          { class: "song-list" },
+          group.songs.map((song) => el("li", { class: "song", text: song.title }))
+        ),
+      ]
+    ),
+  ]);
 
   const section = el(
     "section",
