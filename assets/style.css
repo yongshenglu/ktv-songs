@@ -619,6 +619,130 @@ textarea {
   }
 }
 
+/* ---------- 底部面板（导出） ---------- */
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: rgba(4, 6, 10, 0.66);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  animation: fade-in 0.18s ease;
+}
+
+.sheet {
+  width: 100%;
+  max-width: var(--maxw);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-radius: 20px 20px 0 0;
+  padding: 10px 16px calc(16px + env(safe-area-inset-bottom));
+  box-shadow: var(--shadow);
+  animation: sheet-up 0.24s ease;
+}
+
+.sheet-handle {
+  width: 38px;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border);
+  margin: 4px auto 12px;
+}
+
+.sheet-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.sheet-sub {
+  margin: 4px 0 14px;
+  font-size: 13px;
+  color: var(--text-3);
+}
+
+.sheet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.sheet-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  min-height: 62px;
+  padding: 11px 13px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border-soft);
+  border-radius: 13px;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.sheet-item:active {
+  background: var(--surface-2);
+}
+
+.sheet-item-icon {
+  flex: none;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.sheet-item-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sheet-item-label {
+  font-size: 15.5px;
+  font-weight: 650;
+  color: var(--text);
+}
+
+.sheet-item-desc {
+  font-size: 12.5px;
+  color: var(--text-3);
+  line-height: 1.45;
+}
+
+.sheet-item-chev {
+  flex: none;
+  color: var(--text-3);
+  font-size: 22px;
+  line-height: 1;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
 /* 桌面端微调 */
 @media (min-width: 720px) {
   .topbar {

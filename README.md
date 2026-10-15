@@ -18,9 +18,15 @@
 │   ├── style.css       移动优先的深色样式
 │   ├── common.js       数据读写、拼音排序、批量行解析
 │   ├── list.js         显示页逻辑
-│   └── add.js          添加页逻辑（GitHub API 客户端）
+│   ├── export.js       导出：纯文本 / CSV / JSON / 分享图片
+│   ├── add.js          添加页逻辑（GitHub API 客户端）
+│   ├── icon.svg / icon-*.png / apple-touch-icon.png
+│   └── favicon-32.png
 ├── data/
 │   └── songs.json      歌曲数据
+├── tools/
+│   └── make_icons.py   图标生成脚本（开发用，不参与部署）
+├── site.webmanifest    PWA 清单
 ├── .nojekyll           关闭 GitHub Pages 的 Jekyll 处理
 └── README.md
 ```
@@ -142,6 +148,22 @@ python tools/make_icons.py
 - 顶部「全部展开 / 全部收起」一键切换
 - 你手动展开的状态会被记住，下次打开还是那样
 - 歌手和歌名都按**拼音**排序
+
+### 导出歌单
+
+显示页底部点 **导出**，四种格式任选：
+
+| 格式 | 去向 | 适合 |
+|---|---|---|
+| **复制纯文本** | 剪贴板 | 粘进微信 / 备忘录 / 点歌台，按原唱者分组 |
+| **CSV 表格** | 下载 `.csv` | Excel / WPS / Numbers 打开，可排序筛选打印 |
+| **JSON 备份** | 下载 `.json` | 与 `data/songs.json` 同构，换设备迁移或回滚 |
+| **分享图片** | 系统分享 / 下载 `.jpg` | 深色 KTV 风长图，发群、存相册 |
+
+- 导出范围是**全部歌曲**，按原唱者分组、拼音排序
+- 文件名带日期：`KTV歌单-2026-10-15.csv`
+- CSV 带 BOM，Excel 打开中文不乱码
+- 分享图片在支持的手机浏览器上会直接唤起系统分享面板（可存相册、发微信）；不支持时自动改为下载
 
 ### 改歌 / 删歌
 
