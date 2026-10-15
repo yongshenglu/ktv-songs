@@ -63,6 +63,25 @@ https://<你的用户名>.github.io/ktv-songs/
 
 用手机浏览器打开上面的地址 → 浏览器菜单 → **添加到主屏幕**，就会像 App 一样有个图标。
 
+图标是深色底 + 琥珀色音符，跟站内品牌色一致：
+
+| 文件 | 用途 |
+|---|---|
+| `assets/apple-touch-icon.png` | iOS「添加到主屏幕」图标（180×180） |
+| `assets/icon-192.png` / `icon-512.png` | 安卓/桌面安装图标（`purpose: any`） |
+| `assets/icon-maskable-*.png` | 启动器裁切成圆形等形状时用（满幅，内容在中央安全区） |
+| `assets/icon.svg` | 现代浏览器标签页图标（矢量，无限清晰） |
+| `assets/favicon-32.png` | 不支持 SVG 的旧浏览器兜底 |
+| `site.webmanifest` | PWA 清单：应用名、主题色、图标声明 |
+
+**换图标**：改 `tools/make_icons.py` 里的配色/造型，跑一次就全部重新生成。
+
+```bash
+python tools/make_icons.py
+```
+
+需要 Pillow（`pip install Pillow`）。改完记得把 `assets/icon.svg` 也同步改一下，它和 PNG 是两份独立实现，但几何参数在注释里是对应的。
+
 ---
 
 ## 二、配置 GitHub 同步（加歌用）
