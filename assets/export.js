@@ -1,5 +1,6 @@
 /* =========================================================
    导出歌单：纯文本 / CSV / JSON / 分享图片
+   以选项列表的形式渲染到添加页的容器里
    ========================================================= */
 
 import { clear, el, groupByArtist, toast } from "./common.js";
@@ -7,9 +8,10 @@ import { clear, el, groupByArtist, toast } from "./common.js";
 const FONT_STACK =
   '"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC","Helvetica Neue",Arial,sans-serif';
 
-const CSV_BOM = String.fromCharCode(0xfeff); // Excel 需要 BOM，否则中文乱码
-
 const SITE = "yongshenglu.github.io/ktv-songs";
+
+/** Excel 需要 BOM，否则中文乱码 */
+const CSV_BOM = String.fromCharCode(0xfeff);
 
 /* ---------- 小工具 ---------- */
 
@@ -79,7 +81,7 @@ function csvCell(value) {
   return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
-/** Excel / WPS 可直接打开的两列 CSV（带 BOM，避免中文乱码） */
+/** Excel / WPS 可直接打开的两列 CSV */
 function buildCSV(songs) {
   const rows = [["原唱者", "歌名"]];
   for (const g of groupByArtist(songs)) {
@@ -151,8 +153,7 @@ function renderShareImage(songs) {
 
     const layout = groups.map((g) => {
       const rows = g.songs.map((s) => wrap(s.title, F.song, inner - INDENT));
-      const h = F.artist.lh + 6 + rows.reduce((a, r) => a + r.length * F.song.lh, 0);
-      H += h + 26;
+      H += F.artist.lh + 6 + rows.reduce((a, r) => a + r.length * F.song.lh, 0) + 26;
       return rows;
     });
 
@@ -176,7 +177,6 @@ function renderShareImage(songs) {
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
-    // 柔和辉光，和站内质感一致
     const glow = ctx.createRadialGradient(W * 0.42, H * 0.22, 0, W * 0.42, H * 0.22, W * 0.9);
     glow.addColorStop(0, "rgba(245,185,66,0.13)");
     glow.addColorStop(1, "rgba(245,185,66,0)");
@@ -211,8 +211,7 @@ function renderShareImage(songs) {
       const count = `${g.songs.length} 首`;
       setFont(ctx, 400, 19);
       ctx.fillStyle = "#6f7c8f";
-      const cw = ctx.measureText(count).width;
-      ctx.fillText(count, W - PAD - cw, y + 10);
+      ctx.fillText(count, W - PAD - ctx.measureText(count).width, y + 10);
       y += F.artist.lh + 6;
 
       layout[gi].forEach((lines, si) => {
@@ -270,7 +269,7 @@ async function exportImage(songs) {
   return `已保存图片 ${name}`;
 }
 
-/* ---------- 底部面板 ---------- */
+/* ---------- 选项列表 ---------- */
 
 const OPTIONS = [
   {
@@ -299,68 +298,39 @@ const OPTIONS = [
   },
 ];
 
-export function initExport({ getSongs }) {
-  const backdrop = el("div", {
-    class: "sheet-backdrop",
-    id: "export-sheet",
-    hidden: true,
-  });
+/**
+ * 把导出选项渲染进 container。
+ * @param {() => object[]} getSongs
+ * @param {HTMLElement} container
+ * @returns {{ refresh: () => void }}
+ */
+export function initExport({ getSongs, container }) {
+  clear(container);
+  container.classList.add("export-list");
 
-  const sub = el("p", { class: "sheet-sub" });
-  const list = el("div", { class: "sheet-list" });
-
-  const sheet = el("div", { class: "sheet", role: "dialog", "aria-modal": "true", "aria-label": "导出歌单" }, [
-    el("div", { class: "sheet-handle" }),
-    el("h2", { class: "sheet-title", text: "导出歌单" }),
-    sub,
-    list,
-    el("button", {
-      class: "btn btn-ghost btn-block",
-      type: "button",
-      text: "取消",
-      onclick: close,
-    }),
-  ]);
-  backdrop.append(sheet);
-  document.body.append(backdrop);
-
-  function open() {
+  async function handle(key) {
     const songs = getSongs() || [];
     if (songs.length === 0) {
       toast("还没有歌曲可以导出", { type: "error" });
       return;
     }
-    sub.textContent = `共 ${songs.length} 首 · ${groupByArtist(songs).length} 位歌手`;
-    backdrop.hidden = false;
-    document.body.style.overflow = "hidden";
-  }
-
-  function close() {
-    backdrop.hidden = true;
-    document.body.style.overflow = "";
-  }
-
-  async function handle(key) {
-    const songs = getSongs() || [];
-    if (songs.length === 0) return;
 
     try {
       if (key === "text") {
         const ok = await copyText(buildText(songs));
-        toast(ok ? "已复制到剪贴板" : "复制失败，请手动选择文本", { type: ok ? "ok" : "error" });
-        if (ok) close();
+        toast(ok ? "已复制到剪贴板" : "复制失败，请手动选择文本", {
+          type: ok ? "ok" : "error",
+        });
         return;
       }
 
       if (key === "csv") {
-        // 前置 BOM，否则 Excel 打开中文会乱码
         const blob = new Blob([CSV_BOM + buildCSV(songs)], {
           type: "text/csv;charset=utf-8",
         });
         const name = `${fileBase()}.csv`;
         download(blob, name);
         toast(`已下载 ${name}`);
-        close();
         return;
       }
 
@@ -371,14 +341,12 @@ export function initExport({ getSongs }) {
         const name = `${fileBase()}.json`;
         download(blob, name);
         toast(`已下载 ${name}`);
-        close();
         return;
       }
 
       if (key === "image") {
         const msg = await exportImage(songs);
         if (msg) toast(msg);
-        close();
       }
     } catch (err) {
       toast(err?.message || "导出失败", { type: "error" });
@@ -386,28 +354,21 @@ export function initExport({ getSongs }) {
   }
 
   for (const opt of OPTIONS) {
-    list.append(
+    container.append(
       el(
         "button",
-        { class: "sheet-item", type: "button", onclick: () => handle(opt.key) },
+        { class: "export-item", type: "button", onclick: () => handle(opt.key) },
         [
-          el("span", { class: "sheet-item-icon", text: opt.icon }),
-          el("span", { class: "sheet-item-body" }, [
-            el("span", { class: "sheet-item-label", text: opt.label }),
-            el("span", { class: "sheet-item-desc", text: opt.desc }),
+          el("span", { class: "export-item-icon", text: opt.icon }),
+          el("span", { class: "export-item-body" }, [
+            el("span", { class: "export-item-label", text: opt.label }),
+            el("span", { class: "export-item-desc", text: opt.desc }),
           ]),
-          el("span", { class: "sheet-item-chev", text: "›" }),
+          el("span", { class: "export-item-chev", text: "›" }),
         ]
       )
     );
   }
 
-  backdrop.addEventListener("click", (e) => {
-    if (e.target === backdrop) close();
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !backdrop.hidden) close();
-  });
-
-  return { open, close };
+  return { refresh: () => {} };
 }

@@ -7,7 +7,9 @@ import {
   STORAGE_KEYS,
   emptyData,
   getConfig,
+  groupByArtist,
   inferRepo,
+  loadSongs,
   makeId,
   normalizeData,
   parseRepoField,
@@ -17,6 +19,7 @@ import {
   store,
   toast,
 } from "./common.js";
+import { initExport } from "./export.js";
 
 /* ---------- DOM ---------- */
 
@@ -213,7 +216,7 @@ async function ghPutFile(cfg, token, data, message, sha) {
  * @param {{artist:string,title:string}[]} entries
  * @param {(toAdd:{artist:string,title:string}[]) => string} buildMessage
  *        基于真正写入的条目生成 commit message，避免把重复项也算进去
- * @returns {{added:number, skipped:number}}
+ * @returns {{added:number, skipped:number, entries:object[]}}
  */
 async function commitSongs(entries, buildMessage) {
   const token = getToken();
@@ -238,7 +241,7 @@ async function commitSongs(entries, buildMessage) {
       toAdd.push({ id: makeId(), artist: e.artist, title: e.title });
     }
 
-    if (toAdd.length === 0) return { added: 0, skipped };
+    if (toAdd.length === 0) return { added: 0, skipped, entries: [] };
 
     const next = {
       version: 1,
@@ -250,7 +253,7 @@ async function commitSongs(entries, buildMessage) {
 
     try {
       await ghPutFile(cfg, token, next, message, remote.sha);
-      return { added: toAdd.length, skipped };
+      return { added: toAdd.length, skipped, entries: toAdd };
     } catch (err) {
       if (err instanceof GhError && err.status === 409 && attempt === 0) continue;
       throw err;
@@ -290,6 +293,7 @@ async function handleSingleAdd() {
     inArtist.value = "";
     inTitle.value = "";
     inArtist.focus();
+    mergeExportSongs(result.entries);
     toast(`已添加：${artist} - ${title}`, {
       type: "ok",
       action: { label: "查看歌单", href: "./index.html" },
@@ -336,6 +340,7 @@ async function handleBatchAdd() {
       showFormError(batchError, `全部重复，未写入。${invalid > 0 ? `另有 ${invalid} 行无法识别。` : ""}`);
     } else {
       batchInput.value = "";
+      mergeExportSongs(result.entries);
       toast(parts.join("，"), {
         type: "ok",
         action: { label: "查看歌单", href: "./index.html" },
@@ -430,8 +435,63 @@ inTitle.addEventListener("keydown", (e) => {
   }
 });
 
+/* ---------- 导出 ---------- */
+
+const exportCount = $("export-count");
+const exportHint = $("export-hint");
+const exportList = $("export-list");
+
+/** 导出用的歌曲数据；加完歌后立即合并进本 */
+let exportSongs = [];
+
+initExport({ getSongs: () => exportSongs, container: exportList });
+
+function paintExportStats() {
+  const n = exportSongs.length;
+  const m = groupByArtist(exportSongs).length;
+  exportCount.className = `badge ${n ? "badge-on" : "badge-off"}`;
+  exportCount.textContent = n ? `${n} 首 · ${m} 位歌手` : "暂无歌曲";
+  exportHint.textContent = n
+    ? "导出全部歌曲，按原唱者分组、拼音排序。"
+    : "还没有歌曲，先在上面录几首再导出。";
+}
+
+/** 按 songKey 去重合并，保留已有顺序 */
+function mergeExportSongs(entries) {
+  const seen = new Set(exportSongs.map((s) => songKey(s.artist, s.title)));
+  let changed = false;
+  for (const s of entries) {
+    const key = songKey(s.artist, s.title);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    exportSongs.push({ id: s.id || makeId(), artist: s.artist, title: s.title });
+    changed = true;
+  }
+  if (changed) paintExportStats();
+}
+
+/**
+ * 从远端拉一次并合并。
+ * 用合并而不是覆盖 —— GitHub Pages 有 CDN 缓存，直接覆盖可能把刚加进去的歌冲掉。
+ */
+async function refreshExportSongs() {
+  try {
+    const data = await loadSongs();
+    mergeExportSongs(data.songs);
+    paintExportStats();
+  } catch (err) {
+    if (exportSongs.length === 0) {
+      exportCount.className = "badge badge-off";
+      exportCount.textContent = "读取失败";
+      exportHint.textContent = `读取歌单失败（${err?.message || "未知错误"}）。`;
+    }
+  }
+}
+
 /* ---------- 初始化 ---------- */
 
 paintRepoField();
 paintSyncStatus();
+paintExportStats();
+refreshExportSongs();
 inArtist.focus();

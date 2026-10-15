@@ -12,17 +12,11 @@ import {
   normKey,
   saveExpanded,
 } from "./common.js";
-import { initExport } from "./export.js";
 
 const listEl = document.getElementById("list");
 const stateEl = document.getElementById("state");
 const statsEl = document.getElementById("stats");
 const toggleAllBtn = document.getElementById("toggle-all");
-
-/** 当前已加载的歌曲，导出用 */
-let currentSongs = [];
-const exportCtl = initExport({ getSongs: () => currentSongs });
-document.getElementById("export-open")?.addEventListener("click", () => exportCtl.open());
 
 const CHEVRON = `<svg class="chev" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 7.5 10 12.5 15 7.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
@@ -136,7 +130,6 @@ function syncToggleAllLabel() {
 }
 
 function render(data) {
-  currentSongs = data.songs;
   groups = groupByArtist(data.songs);
   hideState();
 
