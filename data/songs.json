@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-15T07:29:20.797Z",
+  "updatedAt": "2026-10-15T07:30:34.244Z",
   "songs": [
     {
       "id": "163c3564-e9cc-4669-b9f4-751f13592d73",
@@ -301,6 +301,11 @@
       "id": "b0fc9083-fa3e-4958-bbef-193be49e2b2b",
       "artist": "周传雄",
       "title": "青花"
+    },
+    {
+      "id": "aaeb6ddc-dc4c-410f-bc2b-f1b31b00acae",
+      "artist": "周传雄",
+      "title": "冬天的秘密"
     }
   ]
 }
