@@ -1,12 +1,12 @@
 /* =========================================================
-   显示页逻辑：按原唱者分区、可折叠、统计
+   显示页逻辑：按原唱者分区、歌名胶囊、可折叠、统计
    ========================================================= */
 
 import {
   byPinyin,
   clear,
   el,
-  getExpanded,
+  getExpandedOrNull,
   groupByArtist,
   loadSongs,
   normKey,
@@ -20,8 +20,10 @@ const toggleAllBtn = document.getElementById("toggle-all");
 
 const CHEVRON = `<svg class="chev" viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 7.5 10 12.5 15 7.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
-/** 当前渲染出来的分组信息 */
+/** 当前渲染出来的分组 */
 let groups = [];
+/** 当前展开的歌手 key */
+let expanded = new Set();
 
 function showState({ icon, title, text, action, isError = false }) {
   stateEl.hidden = false;
@@ -63,22 +65,21 @@ function renderStats(songCount, artistCount) {
   );
 }
 
-function renderGroup(group, expandedSet) {
+function renderGroup(group) {
   const key = normKey(group.artist);
-  const isOpen = expandedSet.has(key);
+  const isOpen = expanded.has(key);
 
-  const body = el("div", { class: "artist-body" }, [
-    el(
-      "ul",
-      { class: "song-list" },
-      group.songs.map((song, i) =>
-        el("li", { class: "song" }, [
-          el("span", { class: "song-idx", text: String(i + 1) }),
-          el("span", { class: "song-title", text: song.title }),
-        ])
-      )
-    ),
-  ]);
+  const body = el(
+    "div",
+    { class: "artist-body" },
+    [
+      el(
+        "ul",
+        { class: "song-list" },
+        group.songs.map((song) => el("li", { class: "song", text: song.title }))
+      ),
+    ]
+  );
 
   const section = el(
     "section",
@@ -106,7 +107,6 @@ function renderGroup(group, expandedSet) {
 }
 
 function toggleGroup(key) {
-  const expanded = getExpanded();
   const section = listEl.querySelector(`[data-artist="${CSS.escape(key)}"]`);
   const willOpen = !expanded.has(key);
 
@@ -122,10 +122,12 @@ function toggleGroup(key) {
   syncToggleAllLabel();
 }
 
+function allOpen() {
+  return groups.length > 0 && groups.every((g) => expanded.has(normKey(g.artist)));
+}
+
 function syncToggleAllLabel() {
-  const expanded = getExpanded();
-  const allOpen = groups.length > 0 && groups.every((g) => expanded.has(normKey(g.artist)));
-  toggleAllBtn.textContent = allOpen ? "全部收起" : "全部展开";
+  toggleAllBtn.textContent = allOpen() ? "全部收起" : "全部展开";
   toggleAllBtn.disabled = groups.length === 0;
 }
 
@@ -150,16 +152,16 @@ function render(data) {
     return;
   }
 
-  const expanded = getExpanded();
-  // 只保留仍然存在的歌手，避免残留脏数据
   const alive = new Set(groups.map((g) => normKey(g.artist)));
-  const cleaned = new Set([...expanded].filter((k) => alive.has(k)));
-  if (cleaned.size !== expanded.size) saveExpanded(cleaned);
+  const stored = getExpandedOrNull();
+  // 从未手动设置过 → 默认全部展开；设置过则尊重上次状态
+  expanded = stored ? new Set([...stored].filter((k) => alive.has(k))) : new Set(alive);
+  if (stored) saveExpanded(expanded);
 
   renderStats(data.songs.length, groups.length);
   clear(listEl);
   const frag = document.createDocumentFragment();
-  for (const g of groups) frag.append(renderGroup(g, cleaned));
+  for (const g of groups) frag.append(renderGroup(g));
   listEl.append(frag);
   syncToggleAllLabel();
 }
@@ -177,13 +179,11 @@ function renderError(err) {
 }
 
 toggleAllBtn.addEventListener("click", () => {
-  const expanded = getExpanded();
-  const allOpen = groups.length > 0 && groups.every((g) => expanded.has(normKey(g.artist)));
-  const next = allOpen ? new Set() : new Set(groups.map((g) => normKey(g.artist)));
-  saveExpanded(next);
+  expanded = allOpen() ? new Set() : new Set(groups.map((g) => normKey(g.artist)));
+  saveExpanded(expanded);
 
   for (const section of listEl.querySelectorAll(".artist")) {
-    const open = next.has(section.dataset.artist);
+    const open = expanded.has(section.dataset.artist);
     section.classList.toggle("is-open", open);
     section.querySelector(".artist-head").setAttribute("aria-expanded", String(open));
   }

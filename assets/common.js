@@ -270,9 +270,17 @@ export function parseSongLines(text) {
 
 /* ---------- 折叠状态 ---------- */
 
-export function getExpanded() {
+/**
+ * 用户手动保存的展开集合。
+ * 从未设置过返回 null，由调用方决定默认值。
+ */
+export function getExpandedOrNull() {
   const v = LS.get(STORAGE_KEYS.expanded, null);
-  return Array.isArray(v) ? new Set(v.map(String)) : new Set();
+  return Array.isArray(v) ? new Set(v.map(String)) : null;
+}
+
+export function getExpanded() {
+  return getExpandedOrNull() ?? new Set();
 }
 
 export function saveExpanded(set) {
