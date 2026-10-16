@@ -110,10 +110,14 @@ textarea {
   gap: 12px;
 }
 
-/* 第二行：添加按钮单独占一行，与上方按钮右对齐 */
-.topbar-row-end {
-  justify-content: flex-end;
+/* 第二行：统计文字在左、添加按钮在右，共处一行 */
+.topbar-row-split {
   margin-top: 6px;
+}
+.topbar-row-split .stats {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
 }
 
 .brand {
