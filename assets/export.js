@@ -70,7 +70,7 @@ function buildText(songs) {
 
   groups.forEach((g, i) => {
     out.push(`${g.artist} · ${g.songs.length} 首`);
-    g.songs.forEach((s, j) => out.push(`  ${j + 1}. ${s.title}`));
+    g.songs.forEach((s, j) => out.push(`  ${j + 1}. ${s.displayTitle}`));
     if (i < groups.length - 1) out.push(``);
   });
   return out.join("\n");
@@ -85,7 +85,7 @@ function csvCell(value) {
 function buildCSV(songs) {
   const rows = [["原唱", "歌名"]];
   for (const g of groupByArtist(songs)) {
-    for (const s of g.songs) rows.push([s.artist, s.title]);
+    for (const s of g.songs) rows.push([g.artist, s.displayTitle]);
   }
   return rows.map((r) => r.map(csvCell).join(",")).join("\r\n") + "\r\n";
 }
@@ -152,7 +152,7 @@ function renderShareImage(songs) {
     let H = TOP + F.title.lh + 8 + F.stats.lh + 30 + 1 + 34;
 
     const layout = groups.map((g) => {
-      const rows = g.songs.map((s) => wrap(s.title, F.song, inner - INDENT));
+      const rows = g.songs.map((s) => wrap(s.displayTitle, F.song, inner - INDENT));
       H += F.artist.lh + 6 + rows.reduce((a, r) => a + r.length * F.song.lh, 0) + 26;
       return rows;
     });

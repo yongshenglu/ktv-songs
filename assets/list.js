@@ -77,7 +77,7 @@ function renderGroup(group) {
         el(
           "ul",
           { class: "song-list" },
-          group.songs.map((song) => el("li", { class: "song", text: song.title }))
+          group.songs.map((song) => el("li", { class: "song", text: song.displayTitle }))
         ),
       ]
     ),

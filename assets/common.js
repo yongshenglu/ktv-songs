@@ -89,21 +89,38 @@ export function makeId() {
 }
 
 /**
- * 归并区：只有一首歌的歌手，统一挂在「一人一首」下、歌名为「原唱-歌名」。
+ * 归并区：只有一首歌的歌手，统一挂在「一人一首」下、歌名写作「原唱-歌名」。
  * 这个分组固定排在最后，不参与拼音排序。
+ *
+ * 归并是**显示层实时计算**的，数据里始终存真实的原唱与歌名 ——
+ * 这样加歌/删歌后会自动进出：某歌手只剩 1 首就并进来，
+ * 他又有了第 2 首就整组按正常拼音排序回到自己的位置。
  */
 export const PINNED_GROUP = "一人一首";
 
-/** 按原唱分组，并按拼音排序（「一人一首」固定在最下方） */
+/** 按原唱分组并排序；每首歌会多出 displayTitle 字段供界面使用 */
 export function groupByArtist(songs) {
+  // 先统计每位歌手有几首，决定谁要被归并
+  const counts = new Map();
+  for (const s of songs) {
+    const k = normKey(s.artist);
+    counts.set(k, (counts.get(k) || 0) + 1);
+  }
+
   const map = new Map();
   for (const s of songs) {
-    const key = normKey(s.artist);
-    if (!map.has(key)) map.set(key, { artist: s.artist, songs: [] });
-    map.get(key).songs.push(s);
+    const solo = counts.get(normKey(s.artist)) === 1;
+    const groupKey = solo ? normKey(PINNED_GROUP) : normKey(s.artist);
+    const displayTitle = solo ? `${s.artist}-${s.title}` : s.title;
+
+    if (!map.has(groupKey)) {
+      map.set(groupKey, { artist: solo ? PINNED_GROUP : s.artist, songs: [] });
+    }
+    map.get(groupKey).songs.push({ ...s, displayTitle });
   }
+
   const groups = [...map.values()];
-  for (const g of groups) g.songs.sort((a, b) => byPinyin(a.title, b.title));
+  for (const g of groups) g.songs.sort((a, b) => byPinyin(a.displayTitle, b.displayTitle));
 
   groups.sort((a, b) => {
     const aPin = normKey(a.artist) === normKey(PINNED_GROUP) ? 1 : 0;

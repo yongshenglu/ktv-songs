@@ -559,7 +559,11 @@ function paintDeleteOptions() {
   for (const g of groupByArtist(exportSongs)) {
     const group = el("optgroup", { label: `${g.artist}（${g.songs.length} 首）` });
     for (const s of g.songs) {
-      group.append(el("option", { value: s.id, text: s.title }));
+      // 用 displayTitle 展示（单曲歌手会拼成「原唱-歌名」），
+      // 同时存进 dataset，确认框就和你看到的字面量比对
+      group.append(
+        el("option", { value: s.id, text: s.displayTitle, dataset: { confirm: s.displayTitle } })
+      );
     }
     delSong.append(group);
   }
@@ -578,11 +582,14 @@ function selectedSong() {
 }
 
 /** 只有「选中了歌」且「确认框歌名一致」时才允许点删除。
- *  用 normKey 归一化比较（去首尾空白、全角转半角、忽略大小写），
+ *  比对的是下拉框里显示的那个名字（单曲歌手为「原唱-歌名」），
+ *  所见即所输。用 normKey 归一化（去首尾空白、全角转半角、忽略大小写），
  *  避免手机输入法的自动首字母大写把英文歌名挡在门外。 */
 function confirmMatches() {
   const target = selectedSong();
-  return Boolean(target) && normKey(delConfirm.value) === normKey(target.title);
+  if (!target) return false;
+  const expect = delSong.selectedOptions[0]?.dataset?.confirm || target.title;
+  return normKey(delConfirm.value) === normKey(expect);
 }
 
 function syncDeleteState() {
