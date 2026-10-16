@@ -88,7 +88,13 @@ export function makeId() {
   return `s-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-/** 按原唱分组，并按拼音排序 */
+/**
+ * 归并区：只有一首歌的歌手，统一挂在「一人一首」下、歌名为「原唱-歌名」。
+ * 这个分组固定排在最后，不参与拼音排序。
+ */
+export const PINNED_GROUP = "一人一首";
+
+/** 按原唱分组，并按拼音排序（「一人一首」固定在最下方） */
 export function groupByArtist(songs) {
   const map = new Map();
   for (const s of songs) {
@@ -98,7 +104,13 @@ export function groupByArtist(songs) {
   }
   const groups = [...map.values()];
   for (const g of groups) g.songs.sort((a, b) => byPinyin(a.title, b.title));
-  groups.sort((a, b) => byPinyin(a.artist, b.artist));
+
+  groups.sort((a, b) => {
+    const aPin = normKey(a.artist) === normKey(PINNED_GROUP) ? 1 : 0;
+    const bPin = normKey(b.artist) === normKey(PINNED_GROUP) ? 1 : 0;
+    if (aPin !== bPin) return aPin - bPin;
+    return byPinyin(a.artist, b.artist);
+  });
   return groups;
 }
 
