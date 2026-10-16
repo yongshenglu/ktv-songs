@@ -27,6 +27,62 @@
     </header>
 
     <main class="page">
+      <!-- 单首添加 -->
+      <section class="card">
+        <div class="card-head">
+          <h2>添加一首</h2>
+        </div>
+
+        <div class="input-row" style="margin-top: 13px">
+          <div class="field">
+            <label for="in-artist">原唱者</label>
+            <input
+              class="input"
+              id="in-artist"
+              type="text"
+              placeholder="周杰伦"
+              autocomplete="off"
+            />
+          </div>
+          <div class="field">
+            <label for="in-title">歌名</label>
+            <input class="input" id="in-title" type="text" placeholder="晴天" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="notice notice-error" id="single-error" hidden></div>
+
+        <div class="form-actions">
+          <button class="btn btn-primary" id="single-add" type="button">添加这首歌</button>
+        </div>
+      </section>
+
+      <!-- 批量添加 -->
+      <details class="disclosure">
+        <summary>批量粘贴</summary>
+        <div class="disclosure-body">
+          <div class="field">
+            <label for="batch-input">每行一首</label>
+            <textarea
+              class="textarea"
+              id="batch-input"
+              placeholder="周杰伦+晴天&#10;林俊杰 - 江南&#10;陈奕迅｜浮夸"
+            ></textarea>
+            <p class="hint">
+              格式 <b>原唱者+歌名</b>，也支持 <b>原唱者 - 歌名</b>、<b>原唱者｜歌名</b>、
+              <b>原唱者：歌名</b>。开头的序号（<code>1.</code> / <code>2、</code>）会被自动去掉；
+              名字里的连字符（如 <code>A-Lin</code>）不会被误当成分隔符。
+            </p>
+          </div>
+
+          <div class="notice notice-error" id="batch-error" hidden></div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" id="batch-add" type="button">批量添加</button>
+          </div>
+        </div>
+      </details>
+
       <!-- GitHub 同步 -->
       <section class="card" id="sync-card">
         <div class="card-head">
@@ -94,62 +150,6 @@
           </div>
         </details>
       </section>
-
-      <!-- 单首添加 -->
-      <section class="card">
-        <div class="card-head">
-          <h2>添加一首</h2>
-        </div>
-
-        <div class="input-row" style="margin-top: 13px">
-          <div class="field">
-            <label for="in-artist">原唱者</label>
-            <input
-              class="input"
-              id="in-artist"
-              type="text"
-              placeholder="周杰伦"
-              autocomplete="off"
-            />
-          </div>
-          <div class="field">
-            <label for="in-title">歌名</label>
-            <input class="input" id="in-title" type="text" placeholder="晴天" autocomplete="off" />
-          </div>
-        </div>
-
-        <div class="notice notice-error" id="single-error" hidden></div>
-
-        <div class="form-actions">
-          <button class="btn btn-primary" id="single-add" type="button">添加这首歌</button>
-        </div>
-      </section>
-
-      <!-- 批量添加 -->
-      <details class="disclosure">
-        <summary>批量粘贴</summary>
-        <div class="disclosure-body">
-          <div class="field">
-            <label for="batch-input">每行一首</label>
-            <textarea
-              class="textarea"
-              id="batch-input"
-              placeholder="周杰伦+晴天&#10;林俊杰 - 江南&#10;陈奕迅｜浮夸"
-            ></textarea>
-            <p class="hint">
-              格式 <b>原唱者+歌名</b>，也支持 <b>原唱者 - 歌名</b>、<b>原唱者｜歌名</b>、
-              <b>原唱者：歌名</b>。开头的序号（<code>1.</code> / <code>2、</code>）会被自动去掉；
-              名字里的连字符（如 <code>A-Lin</code>）不会被误当成分隔符。
-            </p>
-          </div>
-
-          <div class="notice notice-error" id="batch-error" hidden></div>
-
-          <div class="form-actions">
-            <button class="btn btn-primary" id="batch-add" type="button">批量添加</button>
-          </div>
-        </div>
-      </details>
 
       <!-- 导出 -->
       <section class="card" id="export-card">
