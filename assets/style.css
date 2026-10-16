@@ -391,6 +391,10 @@ textarea {
 .field {
   margin-top: 13px;
 }
+/* 没有标题的独立输入框（如批量添加的文本域）：上方不叠加字段间距 */
+.field-flush {
+  margin-top: 0;
+}
 .field label {
   display: block;
   font-size: 13px;
