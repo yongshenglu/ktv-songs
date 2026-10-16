@@ -82,6 +82,36 @@
         </div>
       </details>
 
+      <!-- 删除歌曲 -->
+      <details class="disclosure" id="delete-card">
+        <summary>删除歌曲</summary>
+        <div class="disclosure-body">
+          <div class="field">
+            <label for="del-song">选择歌曲</label>
+            <select class="input" id="del-song"></select>
+            <p class="hint" id="del-hint">先在上面选择要删的歌。</p>
+          </div>
+
+          <div class="field">
+            <label for="del-confirm">输入歌名确认</label>
+            <input
+              class="input"
+              id="del-confirm"
+              type="text"
+              autocomplete="off"
+              placeholder=""
+            />
+            <p class="hint">必须完整输入所选歌曲的<b>歌名</b>才能删除（不区分大小写）。</p>
+          </div>
+
+          <div class="notice notice-error" id="del-error" hidden></div>
+
+          <div class="form-actions">
+            <button class="btn btn-danger" id="del-btn" type="button" disabled>删除这首歌</button>
+          </div>
+        </div>
+      </details>
+
       <!-- GitHub 同步 -->
       <section class="card" id="sync-card">
         <div class="card-head">

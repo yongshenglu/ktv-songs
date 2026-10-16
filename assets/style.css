@@ -211,6 +211,21 @@ textarea {
   border-color: #e0a833;
 }
 
+/* 删除等不可逆操作：红色描边，与琥珀主按钮拉开区分 */
+.btn-danger {
+  background: var(--danger-soft);
+  border-color: rgba(255, 112, 112, 0.4);
+  color: var(--danger);
+}
+.btn-danger:active {
+  background: rgba(255, 112, 112, 0.22);
+}
+.btn-danger:disabled {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text-3);
+}
+
 .btn-ghost {
   background: transparent;
 }
@@ -421,6 +436,21 @@ textarea {
   font-size: 16px;
   outline: none;
   transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+/* 下拉框：与输入框同观感，箭头自绘 */
+select.input {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 38px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 7.5 10 12.5 15 7.5' fill='none' stroke='%236f7c8f' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 18px 18px;
+}
+select.input:invalid,
+select.input[data-empty="true"] {
+  color: var(--text-3);
 }
 .textarea {
   min-height: 132px;
