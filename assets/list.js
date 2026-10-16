@@ -156,8 +156,8 @@ function render(data) {
 
   const alive = new Set(groups.map((g) => normKey(g.artist)));
   const stored = getExpandedOrNull();
-  // 从未手动设置过 → 默认全部展开；设置过则尊重上次状态
-  expanded = stored ? new Set([...stored].filter((k) => alive.has(k))) : new Set(alive);
+  // 从未手动设置过 → 默认全部收起；设置过则尊重上次状态
+  expanded = stored ? new Set([...stored].filter((k) => alive.has(k))) : new Set();
   if (stored) saveExpanded(expanded);
 
   renderStats(data.songs.length, groups.length);
