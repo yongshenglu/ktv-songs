@@ -270,7 +270,7 @@ async function handleSingleAdd() {
   const title = inTitle.value.trim();
 
   if (!artist || !title) {
-    showFormError(singleError, !artist && !title ? "原唱者和歌名都要填。" : !artist ? "原唱者还没填。" : "歌名还没填。");
+    showFormError(singleError, !artist && !title ? "原唱和歌名都要填。" : !artist ? "原唱还没填。" : "歌名还没填。");
     return;
   }
   showFormError(singleError, "");
@@ -452,7 +452,7 @@ function paintExportStats() {
   exportCount.className = `badge ${n ? "badge-on" : "badge-off"}`;
   exportCount.textContent = n ? `${n} 首 · ${m} 位歌手` : "暂无歌曲";
   exportHint.textContent = n
-    ? "导出全部歌曲，按原唱者分组、拼音排序。"
+    ? "导出全部歌曲，按原唱分组、拼音排序。"
     : "还没有歌曲，先在上面录几首再导出。";
 }
 

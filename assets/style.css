@@ -398,7 +398,8 @@ textarea {
   margin-bottom: 6px;
   font-weight: 600;
 }
-.field .hint {
+/* 提示文字：表单内与卡片直属层都用同一套，别只在 .field 里生效 */
+.hint {
   margin: 6px 0 0;
   font-size: 12px;
   color: var(--text-3);

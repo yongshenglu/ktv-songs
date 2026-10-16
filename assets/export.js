@@ -63,7 +63,7 @@ async function copyText(text) {
 
 /* ---------- 各格式内容 ---------- */
 
-/** 按原唱者分组的纯文本清单 */
+/** 按原唱分组的纯文本清单 */
 function buildText(songs) {
   const groups = groupByArtist(songs);
   const out = [`我的 KTV 歌单`, `共 ${songs.length} 首 · ${groups.length} 位歌手`, ``, ``];
@@ -83,7 +83,7 @@ function csvCell(value) {
 
 /** Excel / WPS 可直接打开的两列 CSV */
 function buildCSV(songs) {
-  const rows = [["原唱者", "歌名"]];
+  const rows = [["原唱", "歌名"]];
   for (const g of groupByArtist(songs)) {
     for (const s of g.songs) rows.push([s.artist, s.title]);
   }
@@ -276,13 +276,13 @@ const OPTIONS = [
     key: "text",
     icon: "📋",
     label: "复制纯文本",
-    desc: "按原唱者分组，直接粘进微信 / 备忘录",
+    desc: "按原唱分组，直接粘进微信 / 备忘录",
   },
   {
     key: "csv",
     icon: "📊",
     label: "下载 CSV 表格",
-    desc: "Excel / WPS 可打开，两列：原唱者、歌名",
+    desc: "Excel / WPS 可打开，两列：原唱、歌名",
   },
   {
     key: "json",

@@ -24,7 +24,6 @@
           <h1 class="brand"><span class="brand-mark">＋</span> 添加歌曲</h1>
           <a class="btn btn-ghost btn-sm" href="./index.html">查看歌单</a>
         </div>
-        <p class="stats">按「原唱者 + 歌名」录入，保存到 GitHub 仓库</p>
       </div>
     </header>
 
@@ -37,7 +36,7 @@
 
         <div class="input-row" style="margin-top: 13px">
           <div class="field">
-            <label for="in-artist">原唱者</label>
+            <label for="in-artist">原唱</label>
             <input
               class="input"
               id="in-artist"
@@ -71,8 +70,8 @@
               placeholder="周杰伦+晴天&#10;林俊杰 - 江南&#10;陈奕迅｜浮夸"
             ></textarea>
             <p class="hint">
-              格式 <b>原唱者+歌名</b>，也支持 <b>原唱者 - 歌名</b>、<b>原唱者｜歌名</b>、
-              <b>原唱者：歌名</b>。<br />
+              格式 <b>原唱+歌名</b>，也支持 <b>原唱 - 歌名</b>、<b>原唱｜歌名</b>、
+              <b>原唱：歌名</b>。<br />
               <b>同一个歌手多首</b>：一行里用顿号或逗号隔开即可，不用重复写歌手名 ——
               <code>周杰伦+晴天、稻香、七里香</code><br />
               开头的序号（<code>1.</code> / <code>2、</code>）会被自动去掉；
@@ -94,6 +93,7 @@
           <h2>GitHub 同步</h2>
           <span class="badge badge-off" id="sync-badge">未配置</span>
         </div>
+        <p class="hint">按「原唱 + 歌名」录入，保存到 GitHub 仓库。</p>
 
         <div class="notice notice-warn" id="sync-hint">
           尚未配置 GitHub。填好下方三项后，添加的歌曲会自动提交到你的仓库。
@@ -163,7 +163,7 @@
           <span class="badge badge-off" id="export-count">加载中</span>
         </div>
         <p class="hint" id="export-hint">
-          导出全部歌曲，按原唱者分组、拼音排序。
+          导出全部歌曲，按原唱分组、拼音排序。
         </p>
         <div class="export-list" id="export-list"></div>
       </section>

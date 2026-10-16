@@ -88,7 +88,7 @@ export function makeId() {
   return `s-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-/** 按原唱者分组，并按拼音排序 */
+/** 按原唱分组，并按拼音排序 */
 export function groupByArtist(songs) {
   const map = new Map();
   for (const s of songs) {
@@ -232,7 +232,7 @@ const TITLE_SEPARATORS = /[、，,；;]+/;
  * 解析一行，返回该行对应的多首歌曲。
  *
  * 一行可以写同一个歌手的多首歌：`周杰伦+晴天、稻香、七里香`
- * 也支持 `原唱者 - 歌名` / `原唱者｜歌名` / `原唱者：歌名`。
+ * 也支持 `原唱 - 歌名` / `原唱｜歌名` / `原唱：歌名`。
  *
  * @returns {{artist:string,title:string}[]} 解析不出返回空数组
  */
