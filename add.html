@@ -151,16 +151,18 @@
       </section>
 
       <!-- 导出 -->
-      <section class="card" id="export-card">
-        <div class="card-head">
-          <h2>导出歌单</h2>
+      <details class="disclosure" id="export-card">
+        <summary>
+          导出歌单
           <span class="badge badge-off" id="export-count">加载中</span>
+        </summary>
+        <div class="disclosure-body">
+          <p class="hint" id="export-hint">
+            导出全部歌曲，按原唱分组、拼音排序。
+          </p>
+          <div class="export-list" id="export-list"></div>
         </div>
-        <p class="hint" id="export-hint">
-          导出全部歌曲，按原唱分组、拼音排序。
-        </p>
-        <div class="export-list" id="export-list"></div>
-      </section>
+      </details>
 
       <div class="notice">
         录错了想改？去 GitHub 仓库直接编辑
