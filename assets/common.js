@@ -225,21 +225,34 @@ function findSeparator(line) {
   return null;
 }
 
+/** 同一行里多首歌名之间的分隔符：顿号、逗号、分号（全角/半角） */
+const TITLE_SEPARATORS = /[、，,；;]+/;
+
 /**
- * 解析一行 "原唱者+歌名"（也支持 "原唱者 - 歌名" / "原唱者｜歌名" / "原唱者：歌名"）
- * @returns {{artist:string,title:string}|null} 解析失败返回 null
+ * 解析一行，返回该行对应的多首歌曲。
+ *
+ * 一行可以写同一个歌手的多首歌：`周杰伦+晴天、稻香、七里香`
+ * 也支持 `原唱者 - 歌名` / `原唱者｜歌名` / `原唱者：歌名`。
+ *
+ * @returns {{artist:string,title:string}[]} 解析不出返回空数组
  */
 export function parseSongLine(rawLine) {
   const line = stripIndex(String(rawLine ?? ""));
-  if (!line) return null;
+  if (!line) return [];
 
   const sep = findSeparator(line);
-  if (!sep) return null;
+  if (!sep) return [];
 
   const artist = line.slice(0, sep.at).trim();
-  const title = line.slice(sep.at + sep.len).trim();
-  if (!artist || !title) return null;
-  return { artist, title };
+  const rest = line.slice(sep.at + sep.len);
+  if (!artist || !rest.trim()) return [];
+
+  const titles = rest
+    .split(TITLE_SEPARATORS)
+    .map((t) => t.trim())
+    .filter(Boolean);
+
+  return titles.map((title) => ({ artist, title }));
 }
 
 /** 批量解析并去重（保留首次出现） */
@@ -256,14 +269,16 @@ export function parseSongLines(text) {
       continue;
     }
     const parsed = parseSongLine(line);
-    if (!parsed) {
+    if (parsed.length === 0) {
       invalid++;
       continue;
     }
-    const key = songKey(parsed.artist, parsed.title);
-    if (seen.has(key)) continue;
-    seen.add(key);
-    added.push(parsed);
+    for (const item of parsed) {
+      const key = songKey(item.artist, item.title);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      added.push(item);
+    }
   }
   return { added, invalid, blank };
 }
