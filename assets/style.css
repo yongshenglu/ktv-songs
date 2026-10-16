@@ -102,10 +102,18 @@ textarea {
 .topbar-inner {
   max-width: var(--maxw);
   margin: 0 auto;
+}
+
+.topbar-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  flex-wrap: wrap;
+}
+
+/* 第二行：添加按钮单独占一行，与上方按钮右对齐 */
+.topbar-row-end {
+  justify-content: flex-end;
+  margin-top: 6px;
 }
 
 .brand {
@@ -132,21 +140,8 @@ textarea {
   flex: none;
 }
 
-/* 右上角按钮组：上下排列，两个按钮等宽等高 */
-.topbar-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 6px;
-  flex: none;
-}
-.topbar-actions .btn {
-  white-space: nowrap;
-}
-
 .stats {
   margin: 6px 0 0;
-  width: 100%;
   color: var(--text-3);
   font-size: 13px;
   letter-spacing: 0.02em;
