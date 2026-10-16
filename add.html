@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0b0e14" />
     <meta name="description" content="录入擅长演唱的 KTV 歌曲。" />
-    <title>添加歌曲 · KTV 歌单</title>
+    <title>数据管理 · KTV 歌单</title>
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
@@ -21,7 +21,7 @@
     <header class="topbar">
       <div class="topbar-inner">
         <div class="topbar-row">
-          <h1 class="brand"><span class="brand-mark">＋</span> 添加歌曲</h1>
+          <h1 class="brand"><span class="brand-mark">⚙</span> 数据管理</h1>
           <a class="btn btn-ghost btn-sm" href="./index.html">查看歌单</a>
         </div>
         <p class="stats">按「原唱 + 歌名」录入，保存到 GitHub 仓库。</p>
@@ -86,22 +86,10 @@
       <details class="disclosure" id="delete-card">
         <summary>删除歌曲</summary>
         <div class="disclosure-body">
-          <div class="field">
-            <label for="del-song">选择歌曲</label>
-            <select class="input" id="del-song"></select>
-            <p class="hint" id="del-hint">先在上面选择要删的歌。</p>
-          </div>
-
-          <div class="field">
-            <label for="del-confirm">输入歌名确认</label>
-            <input
-              class="input"
-              id="del-confirm"
-              type="text"
-              autocomplete="off"
-              placeholder=""
-            />
-            <p class="hint">必须完整输入所选歌曲的<b>歌名</b>才能删除（不区分大小写）。</p>
+          <div class="field field-flush">
+            <label for="del-confirm">输入歌名</label>
+            <input class="input" id="del-confirm" type="text" autocomplete="off" />
+            <p class="hint" id="del-hint">完整输入要删的歌名即可，不区分大小写。</p>
           </div>
 
           <div class="notice notice-error" id="del-error" hidden></div>

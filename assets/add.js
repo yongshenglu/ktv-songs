@@ -5,8 +5,6 @@
 import {
   DATA_PATH,
   STORAGE_KEYS,
-  clear,
-  el,
   emptyData,
   getConfig,
   groupByArtist,
@@ -523,77 +521,67 @@ async function refreshExportSongs() {
     const data = await loadSongs();
     mergeExportSongs(data.songs);
     paintExportStats();
-    paintDeleteOptions();
+    syncDeleteState();
   } catch (err) {
     if (exportSongs.length === 0) {
       exportCount.className = "badge badge-off";
       exportCount.textContent = "读取失败";
       exportHint.textContent = `读取歌单失败（${err?.message || "未知错误"}）。`;
-      paintDeleteOptions();
+      syncDeleteState();
     }
   }
 }
 
 /* ---------- 删除歌曲 ---------- */
 
-const delSong = $("del-song");
 const delConfirm = $("del-confirm");
 const delBtn = $("del-btn");
 const delError = $("del-error");
 const delHint = $("del-hint");
 
-/** 用当前歌单填充下拉框，按原唱分组、拼音排序 */
-function paintDeleteOptions() {
-  const prev = delSong.value;
-  clear(delSong);
-
-  if (exportSongs.length === 0) {
-    delSong.append(el("option", { value: "", text: "暂无歌曲", disabled: true, selected: true }));
-    delSong.dataset.empty = "true";
-    delHint.textContent = "还没有歌曲可以删除。";
-    syncDeleteState();
-    return;
-  }
-
-  delSong.append(el("option", { value: "", text: "请选择要删除的歌曲", selected: true }));
-  for (const g of groupByArtist(exportSongs)) {
-    const group = el("optgroup", { label: `${g.artist}（${g.songs.length} 首）` });
-    for (const s of g.songs) {
-      // 用 displayTitle 展示（单曲歌手会拼成「原唱-歌名」），
-      // 同时存进 dataset，确认框就和你看到的字面量比对
-      group.append(
-        el("option", { value: s.id, text: s.displayTitle, dataset: { confirm: s.displayTitle } })
-      );
+/**
+ * 按输入的歌名找歌。同时比对原始 title 和界面显示的「原唱-歌名」，
+ * 所见即所输。normKey 归一化：去首尾空白、全角转半角、忽略大小写。
+ */
+function findMatches() {
+  const q = normKey(delConfirm.value);
+  if (!q) return [];
+  const seen = new Map();
+  for (const s of exportSongs) {
+    if (normKey(s.title) === q || normKey(`${s.artist}-${s.title}`) === q) {
+      seen.set(s.id, s);
     }
-    delSong.append(group);
   }
-  delete delSong.dataset.empty;
-
-  // 尽量保留之前的选择
-  if (prev && exportSongs.some((s) => s.id === prev)) delSong.value = prev;
-
-  delHint.textContent = "选择后，在下面完整输入该歌名才能删除。";
-  syncDeleteState();
-}
-
-/** 当前选中的歌曲 */
-function selectedSong() {
-  return exportSongs.find((s) => s.id === delSong.value) || null;
-}
-
-/** 只有「选中了歌」且「确认框歌名一致」时才允许点删除。
- *  比对的是下拉框里显示的那个名字（单曲歌手为「原唱-歌名」），
- *  所见即所输。用 normKey 归一化（去首尾空白、全角转半角、忽略大小写），
- *  避免手机输入法的自动首字母大写把英文歌名挡在门外。 */
-function confirmMatches() {
-  const target = selectedSong();
-  if (!target) return false;
-  const expect = delSong.selectedOptions[0]?.dataset?.confirm || target.title;
-  return normKey(delConfirm.value) === normKey(expect);
+  return [...seen.values()];
 }
 
 function syncDeleteState() {
-  delBtn.disabled = !confirmMatches();
+  const typed = delConfirm.value.trim();
+
+  if (exportSongs.length === 0) {
+    delHint.textContent = "还没有歌曲可以删除。";
+    delBtn.disabled = true;
+    return;
+  }
+  if (!typed) {
+    delHint.textContent = "完整输入要删的歌名即可，不区分大小写。";
+    delBtn.disabled = true;
+    return;
+  }
+
+  const matches = findMatches();
+  if (matches.length === 1) {
+    delHint.textContent = `将删除：${matches[0].artist} - ${matches[0].title}`;
+    delBtn.disabled = false;
+    return;
+  }
+  if (matches.length > 1) {
+    delHint.textContent = `有 ${matches.length} 首同名歌曲，请去 GitHub 仓库里删除。`;
+    delBtn.disabled = true;
+    return;
+  }
+  delHint.textContent = "没有找到这首歌，请检查歌名。";
+  delBtn.disabled = true;
 }
 
 function showDeleteError(msg) {
@@ -607,15 +595,12 @@ function showDeleteError(msg) {
 }
 
 async function handleDelete() {
-  const target = selectedSong();
-  if (!target) {
-    showDeleteError("请先选择要删除的歌曲。");
+  const matches = findMatches();
+  if (matches.length !== 1) {
+    showDeleteError("请先完整输入歌名。");
     return;
   }
-  if (!confirmMatches()) {
-    showDeleteError("歌名不一致，删除不了。请完整输入上面选中的歌名。");
-    return;
-  }
+  const target = matches[0];
 
   showDeleteError("");
   delBtn.disabled = true;
@@ -628,7 +613,6 @@ async function handleDelete() {
     // 合并是给「加歌」防 CDN 缓存冲掉新增用的，删除若再合并会把刚删的歌找回来
     exportSongs = remaining;
     paintExportStats();
-    paintDeleteOptions();
     delConfirm.value = "";
     syncDeleteState();
     toast(`已删除：${target.artist} - ${target.title}`, {
@@ -644,10 +628,6 @@ async function handleDelete() {
   }
 }
 
-delSong.addEventListener("change", () => {
-  showDeleteError("");
-  syncDeleteState();
-});
 delConfirm.addEventListener("input", () => {
   showDeleteError("");
   syncDeleteState();
@@ -659,6 +639,6 @@ delBtn.addEventListener("click", handleDelete);
 paintRepoField();
 paintSyncStatus();
 paintExportStats();
-paintDeleteOptions();
+syncDeleteState();
 refreshExportSongs();
 inArtist.focus();
