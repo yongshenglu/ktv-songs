@@ -132,6 +132,18 @@ textarea {
   flex: none;
 }
 
+/* 右上角按钮组：上下排列，两个按钮等宽等高 */
+.topbar-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  flex: none;
+}
+.topbar-actions .btn {
+  white-space: nowrap;
+}
+
 .stats {
   margin: 6px 0 0;
   width: 100%;
@@ -150,7 +162,7 @@ textarea {
 .page {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 18px 16px calc(96px + env(safe-area-inset-bottom));
+  padding: 18px 16px calc(32px + env(safe-area-inset-bottom));
 }
 
 .section-title {
@@ -345,30 +357,6 @@ textarea {
 .state.is-error {
   border-color: rgba(255, 112, 112, 0.35);
   background: var(--danger-soft);
-}
-
-/* ---------- 底部固定操作条 ---------- */
-
-.dock {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 40;
-  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-  background: linear-gradient(180deg, rgba(11, 14, 20, 0), rgba(11, 14, 20, 0.92) 38%);
-  pointer-events: none;
-}
-.dock-inner {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  display: flex;
-  gap: 10px;
-  pointer-events: auto;
-}
-.dock .btn {
-  flex: 1 1 auto;
-  box-shadow: var(--shadow);
 }
 
 /* ---------- 卡片 / 表单 ---------- */

@@ -21,7 +21,10 @@
     <header class="topbar">
       <div class="topbar-inner">
         <h1 class="brand"><span class="brand-mark">♪</span> 我的 KTV 歌单</h1>
-        <button id="toggle-all" class="btn btn-ghost btn-sm" type="button">全部展开</button>
+        <div class="topbar-actions">
+          <button id="toggle-all" class="btn btn-ghost btn-sm" type="button">全部展开</button>
+          <a class="btn btn-primary btn-sm" href="./add.html">＋ 添加歌曲</a>
+        </div>
         <p class="stats" id="stats">加载中…</p>
       </div>
     </header>
@@ -30,12 +33,6 @@
       <div id="state" class="state" hidden></div>
       <div id="list" class="artist-list"></div>
     </main>
-
-    <div class="dock">
-      <div class="dock-inner">
-        <a class="btn btn-primary" href="./add.html">＋ 添加歌曲</a>
-      </div>
-    </div>
 
     <script type="module" src="./assets/list.js"></script>
   </body>
