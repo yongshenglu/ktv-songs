@@ -366,7 +366,12 @@ textarea {
   border-radius: var(--radius);
   padding: 16px;
 }
-.card + .card {
+/* 框体之间统一 12px 间隙。
+   不能只写 .card + .card：卡片跟在 disclosure / notice 后面时同样要留缝，
+   否则会出现「GitHub 同步」贴着「批量粘贴」的情况。 */
+.card + .card,
+.disclosure + .card,
+.notice + .card {
   margin-top: 12px;
 }
 
