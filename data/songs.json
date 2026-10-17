@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-17T09:51:23.047Z",
+  "updatedAt": "2026-10-17T09:54:30.069Z",
   "songs": [
     {
       "id": "163c3564-e9cc-4669-b9f4-751f13592d73",
@@ -546,6 +546,16 @@
       "id": "d825cf11-4dfe-4a6b-b334-4670e76df8d5",
       "artist": "张学友",
       "title": "左右为难"
+    },
+    {
+      "id": "cd17cf3f-bbf3-49b0-922c-5d7b7b992831",
+      "artist": "郑中基",
+      "title": "戒情人"
+    },
+    {
+      "id": "dd3ecf04-bdf2-4c24-bb5d-1fe9b34a8748",
+      "artist": "郑中基",
+      "title": "答应不爱你"
     }
   ]
 }
