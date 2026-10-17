@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-10-16T08:04:48.587Z",
+  "updatedAt": "2026-10-17T08:31:50.218Z",
   "songs": [
     {
       "id": "163c3564-e9cc-4669-b9f4-751f13592d73",
@@ -411,6 +411,46 @@
       "id": "8b52dea9-5c97-4ffe-91a7-33940f487432",
       "artist": "潘玮柏",
       "title": "转机"
+    },
+    {
+      "id": "c3af9be9-13e2-443a-a49c-b7d96b749b16",
+      "artist": "蔡永康",
+      "title": "男人不该让女人流泪"
+    },
+    {
+      "id": "7cf4dc75-eeab-418b-afb3-c3cd05707b3a",
+      "artist": "蔡永康",
+      "title": "爱一个人好难"
+    },
+    {
+      "id": "1c693b63-9ce7-4d96-a410-fb5a23e465f1",
+      "artist": "蔡永康",
+      "title": "相遇太早"
+    },
+    {
+      "id": "fb358f76-7700-47a3-b99b-b6df9fdc3c45",
+      "artist": "蔡永康",
+      "title": "我不是爱过就算的人"
+    },
+    {
+      "id": "7115bd40-a12a-4e3d-8e7d-bd6ed530f826",
+      "artist": "蔡永康",
+      "title": "让懂你的人爱你"
+    },
+    {
+      "id": "69311cc8-59ed-4be8-a6b8-eb7e54ee9fae",
+      "artist": "蔡永康",
+      "title": "越吻越伤心"
+    },
+    {
+      "id": "7d2e04cf-af38-417d-8b89-5b7177d8d948",
+      "artist": "蔡永康",
+      "title": "她爱了我好久"
+    },
+    {
+      "id": "956c59c7-d9db-4aeb-8348-5c357dfa2db4",
+      "artist": "蔡永康",
+      "title": "我为你伤心"
     }
   ]
 }
