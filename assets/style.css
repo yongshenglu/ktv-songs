@@ -108,6 +108,8 @@ textarea {
   display: flex;
   align-items: center;
   gap: 12px;
+  /* 更窄的屏幕（如 320px）放不下时，按钮自动换到下一行，标题不被挤断 */
+  flex-wrap: wrap;
 }
 
 /* 第二行：统计文字在左、添加按钮在右，共处一行 */
@@ -120,6 +122,12 @@ textarea {
   margin: 0;
 }
 
+/* 顶栏一行并排两个按钮时，内边距收紧一点给标题让位（高度仍是 44px 触控热区）。
+   只作用于 .topbar-row-actions，不影响其他只有一个按钮的顶栏行 */
+.topbar-row-actions .btn-sm {
+  padding: 0 10px;
+}
+
 .brand {
   margin: 0;
   font-size: 19px;
@@ -128,8 +136,11 @@ textarea {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 1 1 auto;
+  /* flex 1 0 auto：可占满剩余空间把按钮推到右侧，但不缩小，
+     配合 white-space:nowrap 保证标题永不被挤断行 */
+  flex: 1 0 auto;
   min-width: 0;
+  white-space: nowrap;
 }
 
 .brand-mark {
