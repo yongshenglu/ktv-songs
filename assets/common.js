@@ -96,7 +96,7 @@ export function makeId() {
  * 这样加歌/删歌后会自动进出：某歌手只剩 1 首就并进来，
  * 他又有了第 2 首就整组按正常拼音排序回到自己的位置。
  */
-export const PINNED_GROUP = "一人一首";
+const PINNED_GROUP = "一人一首";
 
 /** 按原唱分组并排序；每首歌会多出 displayTitle 字段供界面使用 */
 export function groupByArtist(songs) {
@@ -265,7 +265,7 @@ const TITLE_SEPARATORS = /[、，,；;]+/;
  *
  * @returns {{artist:string,title:string}[]} 解析不出返回空数组
  */
-export function parseSongLine(rawLine) {
+function parseSongLine(rawLine) {
   const line = stripIndex(String(rawLine ?? ""));
   if (!line) return [];
 
@@ -323,7 +323,7 @@ export function getExpandedOrNull() {
   return Array.isArray(v) ? new Set(v.map(String)) : null;
 }
 
-export function getExpanded() {
+function getExpanded() {
   return getExpandedOrNull() ?? new Set();
 }
 

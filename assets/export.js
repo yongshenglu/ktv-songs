@@ -3,12 +3,16 @@
    以选项列表的形式渲染到添加页的容器里
    ========================================================= */
 
-import { clear, el, groupByArtist, toast } from "./common.js";
+import { activeRepoSlug, clear, el, groupByArtist, toast } from "./common.js";
 
 const FONT_STACK =
   '"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC","Helvetica Neue",Arial,sans-serif';
 
-const SITE = "yongshenglu.github.io/ktv-songs";
+/** 图片水印：从当前网址动态推断，fork 出去自动变成别人的地址 */
+function siteLabel() {
+  const slug = activeRepoSlug();
+  return slug ? slug.replace("/", ".github.io/") : "";
+}
 
 /** Excel 需要 BOM，否则中文乱码 */
 const CSV_BOM = String.fromCharCode(0xfeff);
@@ -243,7 +247,8 @@ function renderShareImage(songs) {
 
     ctx.fillStyle = "#6f7c8f";
     setFont(ctx, F.foot.w, F.foot.s);
-    ctx.fillText(`${SITE}  ·  ${today()}`, PAD, y);
+    const label = siteLabel();
+    ctx.fillText(`${label}  ·  ${today()}`, PAD, y);
 
     canvas.toBlob((blob) => {
       if (blob) resolve(blob);
